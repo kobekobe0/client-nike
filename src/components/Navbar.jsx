@@ -49,7 +49,7 @@ const Navbar = () => {
                     <Link to="/cart">
                         <img src={cart} alt="cart" className="w-5 h-auto" />
                     </Link>
-                    <Link to="/profile">
+                    <Link to="/orders">
                         <img src={profile} alt="cart" className="w-5 h-auto" />
                     </Link>
                     
