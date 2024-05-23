@@ -29,7 +29,7 @@ const Signin = () => {
         
         try {
             const xhr = new XMLHttpRequest();
-            xhr.open("POST", `${API_URL}client/login-client`, true);
+            xhr.open("POST", `${API_URL}admin/login-admin`, true);
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.onreadystatechange = function() {
                 if(xhr.readyState === 4 && xhr.status === 200) {
@@ -42,8 +42,8 @@ const Signin = () => {
                         return
                     }
                     localStorage.setItem("token", res.token)
-                    localStorage.setItem("role", "user")
-                    navigate("/")
+                    localStorage.setItem("role", "admin")
+                    navigate("/admin")
                 }
                 //if 401
                 if(xhr.readyState === 4 && xhr.status === 401) {
@@ -92,6 +92,7 @@ const Signin = () => {
                 <div className="flex items-end">
                     <Link to="/" className="flex items-center"><img src={swoosh} alt="swoosh" className="w-16 h-auto object-contain"/></Link>
                     <img src={jumpman} alt="swoosh" className="w-16 h-auto object-contain"/>
+                    <p>ADMIN</p>
                 </div>
                 <div>
                     <h3 className="text-2xl">Enter your credentials to sign in.</h3>
@@ -107,8 +108,7 @@ const Signin = () => {
                     </form>
                     <p className="">By continuing, I agree to Nike's Privacy <br/>Policy and Terms of Use.</p>
                     <button className="px-12 py-4 bg-black mt-8 text-white rounded-md hover:bg-gray-700" onClick={handleSignin}>Sign in</button>
-                    <p className="my-4">Don't have an account? <Link to="/signup" className="text-blue-600">Sign up here.</Link></p>
-                    <p className="my-2">Are you an admin? <Link to="/signin-admin" className="text-blue-600">Click here.</Link></p>
+                    <p className="my-4">Are you a customer? <Link to="/signin" className="text-blue-600">Click here.</Link></p>
 
                 </div>
             </div>

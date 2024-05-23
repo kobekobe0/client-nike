@@ -13,7 +13,7 @@ const sex = [
 ]
 
 const tag = [
-    'bestsellers',
+    'bestseller',
     'featured',
     'sale',
     'new'
@@ -35,6 +35,13 @@ const SideBar = () => {
           search: newSearchParams.toString(),
         });
       }; 
+
+    const clearFilters = () => {
+        navigate({
+            pathname: location.pathname,
+            search: ''
+        })
+    }
     return (
         <div className='w-1/5 flex-grow mx-8'>
             <h2 className="text-3xl font-normal mb-8" >Browse our list</h2>
@@ -74,6 +81,8 @@ const SideBar = () => {
                             </div>
                         ))}
                     </div>
+                    <button type="button" onClick={clearFilters} className="text-lg border hover:bg-red-500 transition-all ease-in-out hover:text-white border-red-500 px-4 text-red-500 mt-8">Clear Filters</button>
+
                 </form>
         </div>
     )

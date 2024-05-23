@@ -3,16 +3,23 @@ import Jumpman from "../assets/jumpman.png"
 import swoosh from "../assets/swoosh.png"
 import cart from "../assets/cart.png"
 import profile from "../assets/profile.png"
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useAuthContext from "../constants/checkAuth";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const Navbar = ({type}) => {
     const [signedIn, setSignedIn] = useState(false)
-    const [categories, setCategories] = useState(['Best Sellers', 'Men', 'Women', 'Kid', 'On sale'])
+    const[role, setRole] = useState('')
+    const [auth, setAuth] = useState(false)
+    const [categories, setCategories] = useState(['Best Seller', 'Men', 'Women', 'Kid', 'On sale'])
 
     const [search, setSearch] = useState('')
     const navigate = useNavigate();
     const location = useLocation();
+
+    const checkAuth = useAuthContext();
+    
+
     const queryParams = new URLSearchParams(location.search);
     const handleChange = (name, value) => {
         const newSearchParams = new URLSearchParams(location.search);
@@ -26,8 +33,42 @@ const Navbar = ({type}) => {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        handleChange('search', search.toLowerCase())
+        if (search) {
+            handleChange('search', search.toLowerCase());
+        } else {
+            const newSearchParams = new URLSearchParams(location.search);
+            newSearchParams.delete('search');
+            navigate({
+                pathname: location.pathname,
+                search: newSearchParams.toString(),
+            });
+        }
+    };
+
+    const handleSignOut = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('role');
+        navigate('/signin');
     }
+
+    useEffect(() => {
+        if(search === '' || search === undefined || search === null) {
+            console.log('search is empty')
+            //remove search from query params
+            const newSearchParams = new URLSearchParams(location.search);
+            newSearchParams.delete('search');
+            navigate({
+                pathname: location.pathname,
+                search: newSearchParams.toString(),
+            });
+        }
+    },[search])
+
+    useEffect(() => {
+        const {auth, role} = checkAuth();
+        setAuth(auth);
+        setRole(role);
+    }, [])
 
     return (
         <main className="flex flex-col">
@@ -38,14 +79,14 @@ const Navbar = ({type}) => {
 
                 <div className="flex gap-2 text-xs items-center">
                     {
-                        signedIn && <div className="flex align-center gap-6">
+                        auth && <div className="flex align-center gap-6">
                             <Link to="/cart">Cart</Link>
                             <Link to="/orders">Orders</Link>
-                            <Link to="/signin">Sign Out</Link>
+                            <button onClick={handleSignOut}>Sign Out</button>
                         </div>
                     }
                     {
-                        !signedIn && <div className="flex gap-6 text-xs items-center">
+                        !auth && <div className="flex gap-6 text-xs items-center">
                             <Link to="/signup">Sign Up</Link>
                             <Link to="/signin">Sign In</Link>
                         </div>
